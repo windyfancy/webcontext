@@ -1,6 +1,6 @@
 {
   "name": "webcontext",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "webcontext",
   "main": "lib/webapplication.js",
   "dependencies": {
