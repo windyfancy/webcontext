@@ -1,6 +1,6 @@
 # 安装
-1.安装node 8.0以上版本
-2.npm install -d webcontext
+1. 安装node 8.0以上版本
+2. npm install -d webcontext
 
 # 简介
 webcontext是一个轻量级的web开发框架和容器, 它能提供像php,jsp一样的页面开发体验
