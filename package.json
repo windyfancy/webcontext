@@ -1,6 +1,6 @@
 {
   "name": "webcontext",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "web framework and web server for Node.js,support session,mysql database,file upload,build-in static file server",
   "keywords": [
     "web",
@@ -22,9 +22,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [
-    "webcontext"
-  ],
-  "author": "",
+  "author": "windyfancy",
   "license": "MIT"
 }
