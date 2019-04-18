@@ -17,8 +17,9 @@ webcontext是一个轻量级的web开发框架和容器, 它能提供像php,jsp�
 ### app.js
 
 ```js
-const App = require('webcontext');
-App.listen();
+const WebContext = require('webcontext');
+const app = new WebContext();
+app.listen();
 ```
 1. 在app.js中引入webcontext。
 2. 调用listen方法。
