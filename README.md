@@ -25,8 +25,8 @@ app.listen();
 2. 调用listen方法。
 3. 运行node app.js启动。
 
-默认监听80端口,如果要改变监听端口，请在根目录的web.conf文件中修改port属性
-#### web.conf
+默认监听80端口,如果要改变监听端口，请在根目录的web.config.json文件中修改port属性
+#### web.config.json
 ```js
 {
     port:"80"
@@ -138,11 +138,11 @@ hello,<%=message%>
 </html>
 ```
 # 数据库操作
-webcontext内置支持mysql数据库，数据库连接字符串在web.conf中配置，配置好后，在程序启动时将自动连接数据库。
+webcontext内置支持mysql数据库，数据库连接字符串在web.config.json中配置，配置好后，在程序启动时将自动连接数据库。
 
 使用this.database获取数据库操作对象，该对象提供select,insert,update,delete,query,use几个方法对数据库进行操作。
 
-web.conf
+web.config.json
 ```js
 {
     port:"8080",
@@ -228,7 +228,7 @@ module.exports= {
 }
 
 # Session存取
-为了支持多进程和分布式，webcontext不再使用进程内sesssion，而是使用数据库内存表存储session。因此使用Session之前，必须要在web.conf中配置好database数据库连接，在进程启动时将自动创建内存表。
+为了支持多进程和分布式，webcontext不再使用进程内sesssion，而是使用数据库内存表存储session。因此使用Session之前，必须要在web.config.json中配置好database数据库连接，在进程启动时将自动创建内存表。
 
 ### session 读取
 在this.session.load()回调函数中得到sessionData对象
@@ -281,7 +281,7 @@ response.cookies["userName"]={
 
 service目录存放url映射处理类,该目录存放的js文件实现onRequest方法。
 frontend是静态文件服务器的根目录，该目录存放前端的静态资源文件如css,图片，html等。
-web.conf 是配置文件，用于配置web服务端口号，数据库连接字符串，上传文件存放目录等
+web.config.json 是配置文件，用于配置web服务端口号，数据库连接字符串，上传文件存放目录等
 
 ```
 |-- service                          
@@ -291,11 +291,11 @@ web.conf 是配置文件，用于配置web服务端口号，数据库连接字�
 |   ┠-images
 |   ┠-css
 |   ┗-js
-|-- web.conf          // config file                   
+|-- web.config.json          // config file                   
 ```
 
 # 配置文件
-配置文件存放于项目根目录下web.conf文件中，首次运行会自动生成，可配置web服务端口号，数据库连接字符串，上传文件存放目录等
+配置文件存放于项目根目录下web.config.json文件中，首次运行会自动生成，可配置web服务端口号，数据库连接字符串，上传文件存放目录等
 ```js
 {
     port:"3000",
