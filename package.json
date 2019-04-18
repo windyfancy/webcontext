@@ -1,7 +1,17 @@
 {
   "name": "webcontext",
   "version": "1.0.1",
-  "description": "webcontext",
+  "description": "web framework and web server for Node.js,support session,mysql database,file upload,build-in static file server",
+  "keywords": [
+    "web",
+    "context",
+    "framework",
+    "http",
+    "server",
+    "middleware",
+    "node",
+    "node.js"
+  ],
   "main": "lib/webapplication.js",
   "dependencies": {
     "ejs": "^2.6.1",

@@ -3,11 +3,11 @@
 2. npm install -d webcontext
 
 # 简介
-webcontext是一个轻量级的web开发框架和容器, 它能提供像php,jsp一样的页面开发体验
+webcontext是一个轻量级的web开发框架和web容器, 它能提供像php,jsp一样的页面开发体验，让开发者专注于业务开发，而不需要关注node.js底层的技术细节和各种中间件的用法，是目前api最简洁的nodejs开发框架，能够让你编写最少的代码快速实现业务。特性如下：
 
-* URL自动路由到相应的js文件,类似于php,jsp的页面
-* 解析请求表单、JSON
-* 内置静态文件服务器
+* URL自动路由到相应的js文件,类似于php,jsp的页面机制
+* 自动解析请求表单、JSON
+* 内置静态文件服务器，不再需要nginx
 * 内置模板引擎(基于ejs)
 * 内置数据库存取(基于mysql)
 * 内置Session(支持多进程、分布式)
@@ -61,7 +61,9 @@ module.exports= {
 
 # URL映射
 
-URL映射就是一个URL请求由哪块代码（类、函数）来处理,webcontext根据js文件路径自动处理URL映射，类似于jsp和php的页面机制，文件必须存放在/service目录下，例如请求http://localhost/index将自动映射到/service/index.js文件，支持多级子目录，例如请求请求http://localhost/todo/list将自动映射到/service/todo/list.js文件，js文件必须使用exports导出一个对象，该对象必须实现onRequest方法,例如最基本的hello,world页面输出，代码如下
+URL映射就是一个URL请求由哪块代码（类、函数）来处理,webcontext根据js文件路径自动处理URL映射，类似于jsp和php的页面机制，文件必须存放在/service目录下，支持多级子目录.
+
+例如请求请求http://localhost/todo/list将自动映射到/service/todo/list.js文件，js文件必须使用exports导出一个对象，该对象必须实现onRequest方法, hello,world示例页面代码如下
 
 ### /service/index.js
 ```js
@@ -71,12 +73,12 @@ module.exports= {
     }
 }
 ```
-也可以在application对象的onRequest添加全局的URL映射，支持正则表达式，下面的代码是在每个http请求的响应头中添加webserver字段。
+也可以在application对象的onRequest添加全局的URL映射，支持正则表达式，下面的代码是在每个http请求的响应头中添加server字段:
 ```js
 const WebApp = require('webcontext');
 const app = new WebApp();
 app.onRequest(/.*/,function (ctx){
-    ctx.response.headers["WebServer"]="webcontext";
+    ctx.response.headers["server"]="webcontext";
 
 });
 ```
@@ -109,7 +111,7 @@ module.exports= {
 ```
 
 # 响应处理
-## 方式一：reponse.body
+## 方式一：this.response.body
 ```js
 this.response.body="hello,world"
 ```
@@ -228,12 +230,12 @@ module.exports= {
 }
 
 # Session存取
-为了支持多进程和分布式，webcontext不再使用进程内sesssion，而是使用数据库内存表存储session。因此使用Session之前，必须要在web.config.json中配置好database数据库连接，在进程启动时将自动创建内存表。
+为了支持多进程和分布式，webcontext使用mysql数据库内存表存储Session。因此使用Session之前，必须确保在web.config.json中配置好database数据库连接， 进程首次启动时将自动创建内存表。
 
-### session 读取
+### Session 读取
 在this.session.load()回调函数中得到sessionData对象
 
-### session 写入
+### Session 写入
 使用 this.session.set({key:val}) 直接写入session,支持一次写入多个值。返回promise对象，如需监听写入成功，则在then方法中注册回调函数执行后续操作。
 
 以下代码是在session中写入userName字段，写入成功后，再从session中读取userName字段
@@ -276,9 +278,13 @@ response.cookies["userName"]={
     httpOnly:false
 }]
 
+# 静态文件服务器
+/frontend目录中存储静态文件，如html,css,图片，js等。
+例如：
+访问http://localhost/css/style.css时对应访问的文件路径是/frontend/css/style.css
+访问http://localhost/images/logo.jpg时对应访问的文件路径是/frontend//images/logo.jpg
 
-# 项目目录结构
-
+# 目录结构
 service目录存放url映射处理类,该目录存放的js文件实现onRequest方法。
 frontend是静态文件服务器的根目录，该目录存放前端的静态资源文件如css,图片，html等。
 web.config.json 是配置文件，用于配置web服务端口号，数据库连接字符串，上传文件存放目录等
