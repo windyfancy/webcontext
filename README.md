@@ -5,13 +5,16 @@
 # 简介
 webcontext是一个轻量级的web开发框架和web容器, 它能提供像php,jsp一样的页面开发体验，让开发者专注于业务开发，而不需要关注node.js底层的技术细节,不需要纠结于选型和研究各种中间件的用法，是目前api最简洁的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
 
-* URL自动路由到相应的js文件,类似于php,jsp的页面机制
-* 自动解析请求表单、JSON
+* URL请求自动映射到相应的js文件,类似于php,jsp的页面机制,不需要额外定义路由
+* 支持热更新，service目录下的文件修改后直接生效，无需重启node
+* 自动解析请求表单、JSON到request.data对象中
+* 内置文件上传，自动解析到request.files对象中
 * 内置静态文件服务器，不再需要nginx
 * 内置模板引擎(基于ejs)
 * 内置数据库存取(基于mysql)
-* 内置Session(支持多进程、分布式)
-* all in one，不需要中间件，配置简单一键运行
+* 内置Session(基于内存表，支持多进程、分布式)
+* 可配置，所有运行参数都在web.config.json中定义，可通过this.config获取
+* all in one，不需要中间件，一键运行
   
 # 快速开始
 ### app.js
