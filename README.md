@@ -3,15 +3,18 @@
 2. npm install -d webcontext
 
 # 简介
-webcontext是一个轻量级的web开发框架和web容器, 它能提供像php,jsp一样的页面开发体验，让开发者专注于业务开发，而不需要关注node.js底层的技术细节和各种中间件的用法，是目前api最简洁的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
+webcontext是一个轻量级的web开发框架和web容器, 它能提供像php,jsp一样的页面开发体验，让开发者专注于业务开发，而不需要关注node.js底层的技术细节,不需要纠结于选型和研究各种中间件的用法，是目前api最简洁的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
 
-* URL自动路由到相应的js文件,类似于php,jsp的页面机制
-* 自动解析请求表单、JSON
+* URL请求自动映射到相应的js文件,类似于php,jsp的页面机制,不需要额外定义路由
+* 支持热更新，service目录下的文件修改后直接生效，无需重启node
+* 自动解析请求表单、JSON到request.data对象中
+* 内置文件上传，自动解析到request.files对象中
 * 内置静态文件服务器，不再需要nginx
 * 内置模板引擎(基于ejs)
 * 内置数据库存取(基于mysql)
-* 内置Session(支持多进程、分布式)
-* all in one，不需要中间件，配置简单一键运行
+* 内置Session(基于内存表，支持多进程、分布式)
+* 可配置，所有运行参数都在web.config.json中定义，可通过this.config获取
+* all in one，不需要中间件，一键运行
   
 # 快速开始
 ### app.js
@@ -25,13 +28,27 @@ app.listen();
 2. 调用listen方法。
 3. 运行node app.js启动。
 
-默认监听80端口,如果要改变监听端口，请在根目录的web.config.json文件中修改port属性
+默认监听80端口,如果要改变监听端口，请在根目录的web.config.json文件中修改port属性(首次运行自动创建)
+
 #### web.config.json
 ```js
 {
-    port:"80"
+    "port":"80",  //http 端口号
+    "index":"/index",  //默认页地址
+    "sessionKey":"my_session_id"  //session 生成的cookie键名称
 }
 ```
+hello,world示例页面代码如下：
+
+### /service/index.js
+```js
+module.exports= {  
+    onRequest() {   
+        this.response.body="hello,world";
+    }
+}
+```
+可使用数据绑定渲染同名的ejs模板页，示例页面代码如下：
 
 ### ./service/index.js
 ```js
@@ -46,9 +63,6 @@ module.exports= {
     }
 }
 ```
-1. 在项目目录service目录下建立index.js，该文件将自动处理/index路径的请求，代码如上所示
-2. 编写onRequest方法
-3. 调用this.render方法，传入一个对象做为数据源，将自动加载同名的扩展名为ejs的模板文件，渲染结果会直接输出到reponse.body中。也可以传入一个字符串不使用模板直接输出。
 ### ./service/index.ejs
 ```html
 <ul>
@@ -57,22 +71,25 @@ module.exports= {
 <%}%>
 </ul>
 ```
- 
+1. 在项目目录service目录下建立index.js和index.ejs，index.js文件将自动处理/index路径的请求，代码如上所示
+2. 在onRequest方法中，调用this.render方法，传入一个对象做为数据源，将自动加载同名的扩展名为ejs的模板文件，渲染结果会直接输出到reponse.body中。也可以传入一个模板字符串而不使用实体的模板文件。
+3. 编写ejs模板，代码如上所示
+   
 
 # URL映射
 
 URL映射就是一个URL请求由哪块代码（类、函数）来处理,webcontext根据js文件路径自动处理URL映射，类似于jsp和php的页面机制，文件必须存放在/service目录下，支持多级子目录.
 
-例如请求请求http://localhost/todo/list将自动映射到/service/todo/list.js文件，js文件必须使用exports导出一个对象，该对象必须实现onRequest方法, hello,world示例页面代码如下
+请求的映射文件示例:
 
-### /service/index.js
-```js
-module.exports= {  
-    onRequest() {   
-        this.response.body="hello,world";
-    }
-}
-```
+http://localhost/index       ----> /service/index.js
+
+http://localhost/todo/list   ----> /service/todo/list.js
+
+http://localhost/todo/add    ----> /service/todo/add.js
+
+js文件必须使用exports导出一个对象，该对象必须实现onRequest方法。
+
 也可以在application对象的onRequest添加全局的URL映射，支持正则表达式，下面的代码是在每个http请求的响应头中添加server字段:
 ```js
 const WebApp = require('webcontext');

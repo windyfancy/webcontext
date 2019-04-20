@@ -17,6 +17,7 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 .vscode
+
 # nyc test coverage
 .nyc_output
 
@@ -30,6 +31,7 @@ bower_components
 .lock-wscript
 web.config.json
 .vscode/
+
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 
@@ -37,6 +39,7 @@ build/Release
 node_modules/
 jspm_packages/
 service/
+
 # TypeScript v1 declaration files
 typings/
 
