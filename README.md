@@ -160,9 +160,14 @@ hello,<%=message%>
 </html>
 ```
 # 数据库操作
-webcontext内置支持mysql数据库，数据库连接字符串在web.config.json中配置，配置好后，在程序启动时将自动连接数据库。
+webcontext内置支持mysql数据库，可以非常方便的进行CURD操作。
 
-使用this.database获取数据库操作对象，该对象提供select,insert,update,delete,query,use几个方法对数据库进行操作。
+数据库连接字符串在web.config.json中配置，配置好后，在程序启动时将自动连接数据库。
+
+使用this.database获取数据库操作对象，该对象提供select,insert,update,delete,query几个方法对数据库进行操作。
+
+注：MySQL8.0以上版本密码认证协议发生了改变，需要用mysql workbench执行如下代码：
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '你的密码';
 
 web.config.json
 ```js
@@ -216,15 +221,17 @@ module.exports= {
 
 调用database.select(tableName,options) 查询数据库
 options的数据结构：
+```js
 {
     columns:["id","title"], //可选参数，定义返回的列
-    orderBy:"createTime", //排序
+    orderBy:"createTime", //排序,逆序为createTime desc
     where:{id:1},  //where 条件,and关系
     pageIndex:1,  //分页查询页码
     pageSize:20  //分页查询页大小
 }
+```
 
-返回值为promise对象，async/await，直接接收返回的结果集。也可以使用传统的then方法传入回调函数获取结果集。
+返回值为promise对象，用async/await直接接收返回的结果集。也可以使用传统的then方法传入回调函数获取结果集。
 如果要使用复杂的查询条件，请使用database.query(sql,params) 传入自定义的sql执行
 
 
@@ -239,6 +246,7 @@ module.exports= {
 ```
 
 #### /service/todo/list.js 代码：
+```js
 module.exports= {
     async onRequest() {
         var result=await this.database.select("todo",{
@@ -248,7 +256,7 @@ module.exports= {
         this.render({list:result});    
     }
 }
-
+```
 # Session存取
 为了支持多进程和分布式，webcontext使用mysql数据库内存表存储Session。因此使用Session之前，必须确保在web.config.json中配置好database数据库连接， 进程首次启动时将自动创建内存表。
 
