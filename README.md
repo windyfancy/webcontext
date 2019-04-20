@@ -3,7 +3,7 @@
 2. npm install -d webcontext
 
 # 简介
-webcontext是一个轻量级的web开发框架和web容器, 它能提供像php,jsp一样的页面开发体验，让开发者专注于业务开发，而不需要关注node.js底层的技术细节,不需要纠结于选型和研究各种中间件的用法，是目前api最简洁的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
+webcontext是一个轻量级的web开发框架和web容器, 它能提供像php、jsp一样的页面开发体验，让开发者专注于业务开发，而不需要关注node.js底层的技术细节,不需要纠结于选型和研究各种中间件的用法，是目前api最简洁的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
 
 * URL请求自动映射到相应的js文件,类似于php,jsp的页面机制,不需要额外定义路由
 * 支持热更新，service目录下的文件修改后直接生效，无需重启node
@@ -104,13 +104,14 @@ app.onRequest(/.*/,function (ctx){
 request.query 获取get参数 
 ## Post请求
 request.body 获取原始的http body
+
 request.data 获取post数据，同时支持json数据和表单数据两种格式。
 
 post 表单数据 (jQuery)：
 ```js
 $.post("/todo/add/",{id:1,title:"hello",status:0})
 ```
- post json数据 (jQuery)：
+post json数据 (jQuery)：
 ```js
 $.ajax({
     type : "POST",
