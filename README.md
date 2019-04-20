@@ -24,7 +24,7 @@ const WebContext = require('webcontext');
 const app = new WebContext();
 app.listen();
 ```
-1. 在app.js中引入webcontext。
+1. 在app.js中引入webcontext，并实例化。
 2. 调用listen方法。
 3. 运行node app.js启动。
 
@@ -34,8 +34,7 @@ app.listen();
 ```js
 {
     "port":"80",  //http 端口号
-    "index":"/index",  //默认页地址
-    "sessionKey":"my_session_id"  //session 生成的cookie键名称
+    "index":"/index"  //默认页地址
 }
 ```
 hello,world示例页面代码如下：
@@ -101,8 +100,11 @@ app.onRequest(/.*/,function (ctx){
 ```
 
 # 请求处理
+## Get请求
+request.query 获取get参数 
 ## Post请求
-使用request.data可以获取post数据，同时支持json数据和表单数据两种格式。
+request.body 获取原始的http body
+request.data 获取post数据，同时支持json数据和表单数据两种格式。
 
 post 表单数据 (jQuery)：
 ```js
