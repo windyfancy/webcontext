@@ -220,13 +220,15 @@ module.exports= {
 ```
 ##  select 
 
-调用database.select(tableName,options) 查询数据库
+调用database.select(tableName,where,options) 查询数据库
+
+where 参数默认使用and关系，例如{id:1,title:'test'} 生成的sql 为where id=1 and title='test'，如果不需要where 条件请将此参数置为null。
+
 options的数据结构：
 ```js
 {
     columns:["id","title"], //可选参数，定义返回的列
     orderBy:"createTime", //排序,逆序为createTime desc
-    where:{id:1},  //where 条件,and关系
     pageIndex:1,  //分页查询页码
     pageSize:20  //分页查询页大小
 }
