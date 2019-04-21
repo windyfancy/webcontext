@@ -265,7 +265,17 @@ module.exports= {
 
 ### Session 读取
 在this.session.load()回调函数中得到sessionData对象
-
+```js
+module.exports= {
+    onRequest() {       
+ 
+        this.session.load( (sessionData)=>{
+            this.response.body="hello,"+sessionData["userName"];
+        })
+         
+    }
+}
+```
 ### Session 写入
 使用 this.session.set({key:val}) 直接写入session,支持一次写入多个值。返回promise对象，如需监听写入成功，则在then方法中注册回调函数执行后续操作。
 
@@ -276,9 +286,7 @@ module.exports= {
         this.session.set({
             userName:"windy"
         }).then(()=>{
-            this.session.load( (sessionData)=>{
-                this.response.body="hello,"+sessionData["userName"];
-            })
+             console.log("ok")
         })
     }
 }
