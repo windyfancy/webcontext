@@ -296,7 +296,10 @@ module.exports= {
 ### 重定向
 response.redirect("/page1.htm")
 ### 文件下载
-response.writeStrem(fs.createReadStream(fileName))
+response.writeFile(localPath)
+
+或者
+response.writeStream(fs.createReadStream(fileName))
 ### 文件上传
 request.files
 ### 请求头读取
