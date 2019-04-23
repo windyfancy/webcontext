@@ -264,14 +264,14 @@ module.exports= {
 为了支持多进程和分布式，webcontext使用mysql数据库内存表存储Session。因此使用Session之前，必须确保在web.config.json中配置好database数据库连接， 进程首次启动时将自动创建内存表。
 
 ### Session 读取
-在this.session.load()回调函数中得到sessionData对象
+在this.session.load() 函数中得到sessionData对象,session是异步加载的，因此需要用aync/await
 ```js
 module.exports= {
-    onRequest() {       
+    async onRequest() {       
  
-        this.session.load( (sessionData)=>{
-            this.response.body="hello,"+sessionData["userName"];
-        })
+        var sessionData=await session.load();
+        this.response.body="hello,"+sessionData["userName"];
+        
          
     }
 }
