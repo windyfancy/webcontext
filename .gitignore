@@ -39,6 +39,7 @@ build/Release
 node_modules/
 jspm_packages/
 service/
+frontend/
 
 # TypeScript v1 declaration files
 typings/
