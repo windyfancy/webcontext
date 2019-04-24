@@ -10,7 +10,7 @@ webcontext是一个轻量级的web开发框架和web容器, 它能提供像php�
 * 自动解析请求表单、JSON到request.data对象中
 * 内置文件上传，自动解析到request.files对象中
 * 支持 CORS 跨域
-* 内置静态文件服务器，不再需要nginx
+* 内置静态文件服务器，默认支持gzip压缩
 * 内置模板引擎(基于ejs)
 * 内置数据库存取(基于mysql)
 * 内置Session(基于内存表，支持多进程、分布式)
