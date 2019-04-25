@@ -30,3 +30,14 @@ app.onRequest("/test/session",async function (ctx){
    ctx.render(session);
 
 })
+
+app.onRequest("/test/server",async function (ctx){
+ 
+    if(ctx.request.query["name"]){
+        ctx.request.query["name"]="windyfancy"
+    }
+    var url=ctx.request.makeUrl();
+    
+    ctx.render(url);
+ 
+ })
