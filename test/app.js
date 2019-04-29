@@ -31,6 +31,26 @@ app.onRequest("/test/session",async function (ctx){
 
 })
 
+app.onRequest("/test/join",async function (ctx){
+    var params={
+        "b.tagId":1
+    }
+    ctx.database.select("wb_article a",params,{
+        join:{
+            table:"wb_article_tag b",
+            on:{
+                "a.id":"b.articleId"
+            }
+        },
+        orderBy:"createTime desc",
+        columns:["a.id,a.title"],
+        pageIndex:1,
+        pageSize:20
+    }).then((res)=>{
+        ctx.response.body=JSON.stringify(res);
+    })
+})
+
 app.onRequest("/test/server",async function (ctx){
  
     if(ctx.request.query["name"]){
