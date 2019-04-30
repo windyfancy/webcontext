@@ -16,6 +16,13 @@ app.onRequest("/test/exists",function (ctx){
     })
 })
 
+app.onRequest("/test/deleteBat",function (ctx){
+    ctx.database.delete("wb_article",{id:[39,40]}).then(function (res){
+        ctx.response.body="count:"+JSON.stringify(res);
+    })
+
+})
+
 app.onRequest("/test/selectWithCount",function (ctx){
     ctx.database.select("todo_list",{id:5},{count:true}).then(function (e){
         ctx.render(e);
