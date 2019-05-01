@@ -2,6 +2,9 @@ var WebContext=require("../lib/webapplication.js");
 var app=new WebContext();
 app.listen();
 
+app.rewriter({ 
+    "/tag\/(.+?)": "/index?code=$1"
+})
 
 app.onRequest("/test/count",function (ctx){
     ctx.database.count("todo_list").then(function (count){
