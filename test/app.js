@@ -2,7 +2,8 @@ var WebContext=require("../lib/webapplication.js");
 var app=new WebContext();
  
 app.rewriter({ 
-    "/tag\/(.+?)": "/index?code=$1"
+    "/tag\/(.+?)": "/index?code=$1",
+    "/baidu":"https://www.baidu.com/"
 })
 
 app.onRequest("/test/count",function (ctx){

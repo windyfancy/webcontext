@@ -7,6 +7,7 @@ webcontext是一个轻量级的web开发框架和web容器, 它能提供像php�
 
 * URL请求自动映射到相应的js文件,类似于php,jsp的页面机制,不需要额外定义路由
 * 支持RestFul,支持url重写
+* 支持反向代理(包括http,https)
 * 支持热更新，service目录下的文件修改后直接生效，无需重启node
 * 自动解析请求表单、JSON到request.data对象中
 * 内置文件上传，自动解析到request.files对象中
