@@ -6,10 +6,12 @@
 webcontext是一个轻量级的web开发框架和web容器, 它能提供像php、jsp一样的页面开发体验，让开发者专注于业务开发，而不需要关注node.js底层的技术细节,不需要纠结于选型和研究各种中间件的用法，是目前api最简洁的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
 
 * URL请求自动映射到相应的js文件,类似于php,jsp的页面机制,不需要额外定义路由
+* 支持RestFul,支持url重写
 * 支持热更新，service目录下的文件修改后直接生效，无需重启node
 * 自动解析请求表单、JSON到request.data对象中
 * 内置文件上传，自动解析到request.files对象中
 * 支持 CORS 跨域
+* 默认支持https(http 2.0)
 * 内置静态文件服务器，默认支持gzip压缩
 * 内置模板引擎(基于ejs)
 * 内置数据库存取(基于mysql)
@@ -23,11 +25,10 @@ webcontext是一个轻量级的web开发框架和web容器, 它能提供像php�
 ```js
 const WebContext = require('webcontext');
 const app = new WebContext();
-app.listen();
+ 
 ```
 1. 在app.js中引入webcontext，并实例化。
-2. 调用listen方法。
-3. 运行node app.js启动。
+2. 运行node app.js启动。
 
 默认监听80端口,如果要改变监听端口，请在根目录的web.config.json文件中修改port属性(首次运行自动创建)
 

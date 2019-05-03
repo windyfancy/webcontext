@@ -1,7 +1,6 @@
 var WebContext=require("../lib/webapplication.js");
 var app=new WebContext();
-app.listen();
-
+ 
 app.rewriter({ 
     "/tag\/(.+?)": "/index?code=$1"
 })
