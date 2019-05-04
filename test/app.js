@@ -13,6 +13,20 @@ app.onRequest("/test/count",function (ctx){
 
 })
 
+app.onRequest("/test/insert",function (ctx){
+    ctx.database.insert("todo_list",{title:"good",status:1} ).then(function (e){
+        ctx.response.body="insert success:"+JSON.stringify(e);
+    })
+
+})
+
+app.onRequest("/test/update",function (ctx){
+    ctx.database.update("todo_list",{ status:1},{id:[7,8,9]} ).then(function (e){
+        ctx.response.body="update success:"+JSON.stringify(e);
+    })
+
+})
+
 app.onRequest("/test/exists",function (ctx){
     ctx.database.exists("todo_list",{id:5}).then(function (e){
         ctx.response.body="exists:"+e;
