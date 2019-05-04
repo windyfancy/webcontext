@@ -1,9 +1,9 @@
 # 安装
 1. 安装node 8.0以上版本
-2. npm install -d webcontext
+2. npm install --save webcontext
 
 # 简介
-webcontext是一个轻量级的web开发框架和web容器, 它能提供像php、jsp一样的页面开发体验，让开发者专注于业务开发，而不需要关注node.js底层的技术细节,不需要纠结于选型和研究各种中间件的用法，是目前api最简洁的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
+webcontext不仅是一个nodejs web开发框架，它还是一个轻量的应用服务器，类似于IIS,tomcat,nginx, 它能提供像php、jsp一样的页面开发体验，集成了静态文件服务，页面路由，反向代理，数据库访问，session存取，文件管理，日志读写等web服务器必备的功能，提供一站式服务，让开发者专注于业务开发，不需要关注node.js底层的技术细节,不需要去选型express,koa各种中间件的用法，它是目前api最简洁,内置功能最齐全的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
 
 * URL请求自动映射到相应的js文件,类似于php,jsp的页面机制,不需要额外定义路由
 * 支持RestFul,支持url重写
@@ -14,9 +14,10 @@ webcontext是一个轻量级的web开发框架和web容器, 它能提供像php�
 * 支持 CORS 跨域
 * 默认支持https(http 2.0)
 * 内置静态文件服务器，默认支持gzip压缩
+* 内置日志功能(基于log4js),站点请求自动写入access.log，可通过this.logger获取日志访问器
 * 内置模板引擎(基于ejs)
-* 内置数据库存取(基于mysql)
-* 内置Session(基于内存表，支持多进程、分布式)
+* 内置数据库访问(基于mysql)，实现了轻量的ORM映射,支持批量insert,update，内置实现分页查询
+* 内置高性能Session(基于内存表，支持多进程、分布式)
 * 可配置，所有运行参数都在web.config.json中定义，可通过this.config获取
 * all in one，不需要中间件，一键运行
   

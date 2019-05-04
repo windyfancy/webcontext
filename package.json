@@ -16,6 +16,7 @@
   "dependencies": {
     "ejs": "^2.6.1",
     "formidable": "^1.2.1",
+    "log4js": "^4.1.0",
     "mysql": "^2.16.0"
   },
   "devDependencies": {},
