@@ -47,10 +47,18 @@ app.onRequest("/test/selectWithCount",function (ctx){
 })
 
 app.onRequest("/test/session",async function (ctx){
-   await ctx.session.set({userName:"windy",msg:"hello"});
+
    
    var session=await ctx.session.load();
-   
+
+
+   await ctx.session.set(
+    {
+      userName:"windy",
+      level:"9",
+      msg:"hello,world"
+ });
+
    ctx.render(session);
 
 })
