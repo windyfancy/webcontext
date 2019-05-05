@@ -98,3 +98,15 @@ app.onRequest("/test/server",async function (ctx){
     ctx.render(url);
  
  })
+
+app.mixin({
+     async checkSession(){
+         var sessions=await this.session.load();
+         if(sessions["userName"]){
+             return sessions["userName"]
+         }else{
+             return "anymous"
+         }
+     }
+ })
+
