@@ -6,6 +6,11 @@ app.rewriter({
     "/baidu":"https://www.baidu.com/"
 })
 
+app.onRequest("/test/request",function (ctx){
+    ctx.server.request("https://github.com").then(function (result){
+        ctx.response.body=result;
+    })
+})
 app.onRequest("/test/count",function (ctx){
     ctx.database.count("todo_list").then(function (count){
         ctx.response.body="count:"+count;
