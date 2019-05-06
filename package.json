@@ -1,6 +1,6 @@
 {
   "name": "webcontext",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "web framework and web server for Node.js,support session,mysql database,file upload,build-in static file server",
   "keywords": [
     "web",
