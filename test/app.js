@@ -99,6 +99,18 @@ app.onRequest("/test/server",async function (ctx){
  
  })
 
+ app.onRequest("/test/orm",async function (ctx){
+    //  var ToDo=ctx.models["todo"];
+    //  var todo=await ToDo.fetch(5);
+    //  console.log(todo);
+    //  todo.title="hello,world";
+    //  todo.save();
+
+     var ToDo=ctx.models["todo"];
+     var todo=new ToDo({id:5});
+     todo.delete();
+ });
+
 app.mixin({
      async checkSession(){
          var sessions=await this.session.load();

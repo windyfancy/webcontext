@@ -6,20 +6,21 @@
 webcontext不仅是一个nodejs web开发框架，它还是一个轻量的应用服务器，类似于IIS,tomcat,nginx, 它能提供像php、jsp一样的页面开发体验，集成了静态文件服务，页面路由，反向代理，数据库访问，session存取，文件管理，日志读写等web服务器必备的功能，提供一站式服务，让开发者专注于业务开发，不需要关注node.js底层的技术细节,不需要去选型express,koa各种中间件的用法，它是目前api最简洁,内置功能最齐全的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
 
 * URL请求自动映射到相应的js文件,类似于php,jsp的页面机制,不需要额外定义路由
-* 支持RestFul,支持url重写
-* 支持反向代理(包括http,https)
+* 支持RestFul,支持url重写，无需修改任何代码即可实现对搜索引擎友好的页在地址。
+* 支持反向代理内网和外网的http接口(包括https)
 * 支持热更新，service目录下的文件修改后直接生效，无需重启node
-* 自动解析请求表单、JSON到request.data对象中
+* 自动解析请求表单、JSON报文直接映射到request.data对象中
 * 内置文件上传，自动解析到request.files对象中
-* 支持 CORS 跨域
+* 支持 CORS 跨域,一行配置即可开启
 * 默认支持https(http 2.0)
 * 内置静态文件服务器，默认支持gzip压缩
 * 内置日志功能(基于log4js),站点请求自动写入access.log，可通过this.logger获取日志访问器
-* 内置模板引擎(基于ejs)
-* 内置数据库访问(基于mysql)，实现了轻量的ORM映射,支持批量insert,update，内置实现分页查询
-* 内置高性能Session(基于内存表，支持多进程、分布式)
+* 内置模板引擎(基于ejs)，模板文件与同名文件自动关联，类似asp.net的code behind
+* 内置数据库访问(基于mysql)，对CURD操作进行了封装，不需要写sql就可以CURD,支持批量insert,update，内置实现分页查询
+* 实现了轻量的数据库 ORM映射，类似于hibernate, 可以通过this.models["表名"] 直接获取实体对象进行操作
+* 内置高性能Session(基于mysql内存表，支持多进程、分布式，后续可选基于redis存储)
 * 可配置，所有运行参数都在web.config.json中定义，可通过this.config获取
-* all in one，不需要中间件，一键运行
+* 不需要中间件，所有功能都已内置，依赖极少，一键运行
   
 # 快速开始
 ### app.js
@@ -163,7 +164,7 @@ service/hello.ejs
 hello,<%=message%>
 </html>
 ```
-# 数据库操作
+# 数据库CURD操作
 webcontext内置支持mysql数据库，可以非常方便的进行CURD操作。
 
 数据库连接字符串在web.config.json中配置，配置好后，在程序启动时将自动连接数据库。
@@ -186,6 +187,7 @@ web.config.json
     }
 }
 ```
+
 ## insert
 
 
@@ -263,6 +265,49 @@ module.exports= {
     }
 }
 ```
+
+# 数据库 ORM 映射
+webcontext可以非常方便的使用orm数据实体映射，使数据库业务代码完全不依赖sql语句。
+可以通过this.models["表名"] 获取实体对象，如：this.models["todo"] ，
+使用ORM 映射之前，需要在web.config.json中定义数据库连接，并在models字段中定义数据表的信息，每个表一个属性，子属性中必须要定义的两个字段是table和primary分别表示表名和主键名。后续的版本将计划实现自动生成orm的配置文件，进一步简化业务开发。
+    "models":{
+        "todo":{
+            "table":"todo_list",
+            "primary":"id",
+            "orderDefault":"createTime desc",
+            "columns":["id","title","createTime"],
+            "query":{} //自定义查询，尚未实现
+        }
+    }
+
+
+获取数据实体对象，使用fetch
+```js
+module.exports= {
+    async onRequest() {
+        var ToDo=this.models["todo"];
+        var todo=await ToDo.fetch(5);
+        this.render({list:todo});    
+    }
+}
+```
+更新数据实体对象，使用save
+```js 
+module.exports= {
+    async onRequest() {
+        var ToDo=this.models["todo"];
+        var todo=new ToDo(1); //获取主键值为1的记录
+        await todo.save();
+        this.render({code:"success"});    
+    }
+}
+```
+删除数据，使用delete
+```js
+     var todo=new ToDo({id:5});
+     todo.delete();
+```
+
 # Session存取
 为了支持多进程和分布式，webcontext使用mysql数据库内存表存储Session。因此使用Session之前，必须确保在web.config.json中配置好database数据库连接， 进程首次启动时将自动创建内存表。
 
