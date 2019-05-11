@@ -16,7 +16,7 @@ webcontext不仅是一个nodejs web开发框架，它还是一个轻量的应用
 * 内置静态文件服务器，默认支持gzip压缩
 * 内置日志功能(基于log4js),站点请求自动写入access.log，可通过this.logger获取日志访问器
 * 内置模板引擎(基于ejs)，模板文件与同名文件自动关联，类似asp.net的code behind
-* 内置数据库访问(基于mysql)，对CURD操作进行了封装，不需要写sql就可以CURD,支持批量insert,update，内置实现分页查询
+* 内置数据库访问(基于mysql)，对CURD操作进行了封装，内置了分页查询和批量更新。
 * 实现了轻量的数据库 ORM映射，类似于hibernate, 可以通过this.models["表名"] 直接获取实体对象进行操作
 * 内置高性能Session(基于mysql内存表，支持多进程、分布式，后续可选基于redis存储)
 * 可配置，所有运行参数都在web.config.json中定义，可通过this.config获取
@@ -206,7 +206,8 @@ module.exports= {
 与insert用法相同，将生成replace into ...的sql 语句执行。前提条件是数据表相应的字段必须设置unique约束。
 
 ##  update
-用法：database.update(tableName,columns,where)，如果colums中定义了id参数，则自动使用id字段做where条件
+用法：database.update(tableName,rows,where)，rows可以是一个对象，也可以是一个数组，如果是数组，则批量更新多行记录
+如果rows中定义了id参数，则不需要传入where 条件，自动使用id字段做where条件，否则必须传为where条件约束更新的记录 
 
 ```js
 module.exports= {
@@ -223,6 +224,9 @@ module.exports= {
     }
 }
 ```
+##  delete
+用法：database.delete(tableName,where) 支持批量删除，例如批量删除id为1,2,3,4的四条记录：database.delete("todo",{id:[1,2,3,4]})
+
 ##  select 
 
 调用database.select(tableName,where,options) 查询数据库
@@ -267,10 +271,11 @@ module.exports= {
 ```
 
 # 数据库 ORM 映射
-webcontext可以非常方便的使用orm数据实体映射，使数据库业务代码完全不依赖sql语句。
+webcontext可以非常方便的使用ORM数据实体映射，使数据库业务代码完全不依赖sql语句。
 可以通过this.models["表名"] 获取实体对象，如：this.models["todo"] ，
-使用ORM 映射之前，需要在web.config.json中定义数据库连接，并在models字段中定义数据表的信息，每个表一个属性，子属性中必须要定义的两个字段是table和primary分别表示表名和主键名。后续的版本将计划实现自动生成orm的配置文件，进一步简化业务开发。
-    "models":{
+使用ORM 映射之前，需要在web.config.json中定义数据库连接，并在models字段中定义数据表的信息，每个表一个属性，子属性中必须要定义的两个字段是table和primary分别表示表名和主键名。后续的版本将计划实现自动生成ORM的配置文件，进一步简化业务开发。
+```js
+ "models":{
         "todo":{
             "table":"todo_list",
             "primary":"id",
@@ -279,7 +284,7 @@ webcontext可以非常方便的使用orm数据实体映射，使数据库业务�
             "query":{} //自定义查询，尚未实现
         }
     }
-
+```
 
 获取数据实体对象，使用fetch
 ```js
