@@ -11,6 +11,12 @@ app.onRequest("/test/request",function (ctx){
         ctx.response.body=result;
     })
 })
+app.onRequest("/test/upload",function (ctx){
+     console.log(ctx.request.data)
+     console.log(ctx.request.files)
+     ctx.response.body="upload success";
+    
+})
 app.onRequest("/test/count",function (ctx){
     ctx.database.count("todo_list").then(function (count){
         ctx.response.body="count:"+count;
