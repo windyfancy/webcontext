@@ -47,7 +47,7 @@ hello,world示例页面代码如下：
 ### /service/index.js
 ```js
 module.exports= {  
-    onRequest() {   
+    onLoad() {   
         this.response.body="hello,world";
     }
 }
@@ -57,7 +57,7 @@ module.exports= {
 ### ./service/index.js
 ```js
 module.exports= {  
-    onRequest() {       
+    onLoad() {       
         var data=[
             {id:1,title:"javascript"},
             {id:2,title:"node.js"},
@@ -76,7 +76,7 @@ module.exports= {
 </ul>
 ```
 1. 在项目目录service目录下建立index.js和index.ejs，index.js文件将自动处理/index路径的请求，代码如上所示
-2. 在onRequest方法中，调用this.render方法，传入一个对象做为数据源，将自动加载同名的扩展名为ejs的模板文件，渲染结果会直接输出到reponse.body中。也可以传入一个模板字符串而不使用实体的模板文件。
+2. 在onLoad方法中，调用this.render方法，传入一个对象做为数据源，将自动加载同名的扩展名为ejs的模板文件，渲染结果会直接输出到reponse.body中。也可以传入一个模板字符串而不使用实体的模板文件。
 3. 编写ejs模板，代码如上所示
    
 
@@ -92,7 +92,7 @@ http://localhost/todo/list   ----> /service/todo/list.js
 
 http://localhost/todo/add    ----> /service/todo/add.js
 
-js文件必须使用exports导出一个对象，该对象必须实现onRequest方法。
+js文件必须使用exports导出一个对象，该对象必须实现onLoad方法。
 
 也可以在application对象的onRequest添加全局的URL映射，支持正则表达式，下面的代码是在每个http请求的响应头中添加server字段:
 ```js
@@ -128,7 +128,7 @@ $.ajax({
 ### /service/todo/add.js 接收post数据代码：
 ```js
 module.exports= {  
-    onRequest() {  
+    onLoad() {  
         var data=this.request.data;
         this.response.body=JSON.stringify(data);      //{id:1,title:"hello"}
     }
@@ -196,7 +196,7 @@ web.config.json
 #### /service/todo/add.js 代码：
 ```js
 module.exports= {  
-    onRequest() {  
+    onLoad() {  
         var data=this.request.data;     //{id:1,title:"hello"}
         this.database.insert("todo",data);  
     }
@@ -211,7 +211,7 @@ module.exports= {
 
 ```js
 module.exports= {
-    onRequest() {
+    onLoad() {
         this.database.update("todo",{
             id:this.request.data["id"],
             title:this.request.data["title"],
@@ -250,7 +250,7 @@ options的数据结构：
 
 ```js
 module.exports= {
-    async onRequest() {
+    async onLoad() {
         var result=await this.database.select("todo",{orderBy:"createTime desc "})
         this.render({list:result});    
     }
@@ -260,7 +260,7 @@ module.exports= {
 #### /service/todo/list.js 代码：
 ```js
 module.exports= {
-    async onRequest() {
+    async onLoad() {
         var result=await this.database.select("todo",{
             where:{status:0},
             orderBy:"createTime desc "
@@ -289,7 +289,7 @@ webcontext可以非常方便的使用ORM数据实体映射，使数据库业务�
 获取数据实体对象，使用fetch
 ```js
 module.exports= {
-    async onRequest() {
+    async onLoad() {
         var ToDo=this.models["todo"];
         var todo=await ToDo.fetch(5);
         this.render({list:todo});    
@@ -299,7 +299,7 @@ module.exports= {
 更新数据实体对象，使用save
 ```js 
 module.exports= {
-    async onRequest() {
+    async onLoad() {
         var ToDo=this.models["todo"];
         var todo=new ToDo(1); //获取主键值为1的记录
         await todo.save();
@@ -320,7 +320,7 @@ module.exports= {
 在this.session.load() 函数中得到sessionData对象,session是异步加载的，因此需要用aync/await
 ```js
 module.exports= {
-    async onRequest() {       
+    async onLoad() {       
  
         var sessionData=await session.load();
         this.response.body="hello,"+sessionData["userName"];
@@ -335,7 +335,7 @@ module.exports= {
 以下代码是在session中写入userName字段，写入成功后，再从session中读取userName字段
 ```js
 module.exports= {
-    onRequest() {       
+    onLoad() {       
         this.session.set({
             userName:"windy"
         }).then(()=>{
@@ -380,7 +380,7 @@ response.cookies["userName"]={
 访问http://localhost/images/logo.jpg时对应访问的文件路径是/frontend//images/logo.jpg
 
 # 目录结构
-service目录存放url映射处理类,该目录存放的js文件实现onRequest方法。
+service目录存放url映射处理类,该目录存放的js文件实现onLoad方法。
 frontend是静态文件服务器的根目录，该目录存放前端的静态资源文件如css,图片，html等。
 web.config.json 是配置文件，用于配置web服务端口号，数据库连接字符串，上传文件存放目录等
 
