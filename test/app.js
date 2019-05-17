@@ -1,16 +1,107 @@
+
 var WebContext=require("../lib/webapplication.js");
+var Path=require("path")
 var app=new WebContext();
+app.config.serviceDir="test/service"
+var assert=require("assert");
+
+console.log(process.cwd())
+var httpRequest=function (url,options){
+    var siteRoot="http://localhost:"+app.config.port;
+    if(url.indexOf("http:")==-1){
+        url=siteRoot+url;
+    }
+    return app.server.request(url,options);
+}
+
+
+describe('http server', function() {
+
+    it('1.index page response 200', function(done) {
+        httpRequest("/").then(function (result){
+            assert.equal(result.code,200);
+            done();
+        })
+        
+    });
+
+
+    it('2.post with form', function(done) {
+        let msg=Math.random().toString();
+        httpRequest("/",{postData:"msg="+msg}).then(function (result){
+            assert.ok(result.body.indexOf(msg)>=0);
+            done();
+        })
+        
+    });
+
+    it('3.post with json', function(done) {
+        let msg=Math.random().toString();
+        httpRequest("/",{postData:{msg:msg}}).then(function (result){
+            assert.ok(result.body.indexOf(msg)>=0);
+            done();
+        })
+        
+    });
+
+
+    it('4.request external url:https://github.com', function(done) {
+        app.onRequest("/test/request",function (ctx){
+            ctx.server.request("https://github.com").then(function (result){
+                assert.equal(result.code,200);
+                ctx.response.body=result.body;
+            })
+        })
+
+        httpRequest("/test/request").then(function (result){
+            assert.ok(result.body.indexOf("github")>=0);
+            done();
+        })
+        
+    });
+
+    it('5.test read and write session ', function(done) {
+        let userName="windy"+Math.random();
+        app.onRequest("/test/sessionWrite",async function (ctx){
+            await ctx.session.set(
+             {
+               userName:userName,
+               level:"9",
+               msg:"hello,world"
+            });
+            result={
+                code:"ok",
+                sessionId:ctx.session.sessionId
+            }
+            ctx.render(JSON.stringify(result));
+         })
+
+         app.onRequest("/test/sessionRead",async function (ctx){
+            var session=await ctx.session.load();
+            var userName=session["userName"]
+            ctx.render(userName);
+         })
+
+        httpRequest("/test/sessionWrite").then(function (result){
+            assert.ok(result.body.indexOf("ok")>=0);
+            let obj=JSON.parse(result.body);
+            let options={headers:{Cookie:app.config.sessionKey+"="+obj.sessionId}};
+            httpRequest("/test/sessionRead",options).then(function (result){
+                assert.ok(result.body.indexOf(userName)>=0);
+                done();
+            });
+            
+        })
+        
+    });
+})
  
 app.rewriter({ 
     "/tag\/(.+?)": "/index?code=$1",
     "/baidu":"https://www.baidu.com/"
 })
 
-app.onRequest("/test/request",function (ctx){
-    ctx.server.request("https://github.com").then(function (result){
-        ctx.response.body=result;
-    })
-})
+
 app.onRequest("/test/count",function (ctx){
     ctx.database.count("todo_list").then(function (count){
         ctx.response.body="count:"+count;
@@ -51,22 +142,7 @@ app.onRequest("/test/selectWithCount",function (ctx){
     })
 })
 
-app.onRequest("/test/session",async function (ctx){
 
-   
-   var session=await ctx.session.load();
-
-
-   await ctx.session.set(
-    {
-      userName:"windy",
-      level:"9",
-      msg:"hello,world"
- });
-
-   ctx.render(session);
-
-})
 
 app.onRequest("/test/join",async function (ctx){
     var params={
