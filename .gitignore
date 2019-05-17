@@ -40,6 +40,7 @@ node_modules/
 jspm_packages/
 service/
 frontend/
+upload/
 
 # TypeScript v1 declaration files
 typings/

@@ -101,7 +101,6 @@ app.rewriter({
     "/baidu":"https://www.baidu.com/"
 })
 
-
 app.onRequest("/test/count",function (ctx){
     ctx.database.count("todo_list").then(function (count){
         ctx.response.body="count:"+count;
