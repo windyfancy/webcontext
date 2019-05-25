@@ -41,6 +41,7 @@ jspm_packages/
 service/
 frontend/
 upload/
+/app.js
 
 # TypeScript v1 declaration files
 typings/
