@@ -45,24 +45,24 @@ describe('http server', function() {
     });
 
 
-    it('4.request external url:https://github.com', function(done) {
+    it('4.request external url:https://www.baidu.com', function(done) {
         app.onRequest("/test/request",function (ctx){
-            ctx.server.request("https://github.com").then(function (result){
-                assert.equal(result.code,200);
+            ctx.server.request("https://www.baidu.com").then(function (result){
                 ctx.response.body=result.body;
             })
         })
 
         httpRequest("/test/request").then(function (result){
-            assert.ok(result.body.indexOf("github")>=0);
+            assert.ok(result.body.indexOf("baidu")>=0);
             done();
         })
         
     });
 
     it('5.test read and write session ', function(done) {
-        let userName="windy"+Math.random();
+        
         app.onRequest("/test/sessionWrite",async function (ctx){
+            let userName="windy"+Math.random();
             await ctx.session.set(
              {
                userName:userName,
@@ -71,6 +71,7 @@ describe('http server', function() {
             });
             result={
                 code:"ok",
+                userName:userName,
                 sessionId:ctx.session.sessionId
             }
             ctx.render(JSON.stringify(result));
@@ -87,7 +88,7 @@ describe('http server', function() {
             let obj=JSON.parse(result.body);
             let options={headers:{Cookie:app.config.sessionKey+"="+obj.sessionId}};
             httpRequest("/test/sessionRead",options).then(function (result){
-                assert.ok(result.body.indexOf(userName)>=0);
+                assert.ok(result.body.indexOf(obj.userName)>=0);
                 done();
             });
             

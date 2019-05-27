@@ -39,8 +39,8 @@ build/Release
 node_modules/
 jspm_packages/
 service/
-frontend/
-upload/
+/client
+/upload
 /app.js
 
 # TypeScript v1 declaration files

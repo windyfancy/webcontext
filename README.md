@@ -374,21 +374,21 @@ response.cookies["userName"]={
 }]
 
 # 静态文件服务器
-/frontend目录中存储静态文件，如html,css,图片，js等。
+/client目录中存储静态文件，如html,css,图片，js等。
 例如：
-访问http://localhost/css/style.css时对应访问的文件路径是/frontend/css/style.css
-访问http://localhost/images/logo.jpg时对应访问的文件路径是/frontend//images/logo.jpg
+访问http://localhost/css/style.css时对应访问的文件路径是/client/css/style.css
+访问http://localhost/images/logo.jpg时对应访问的文件路径是/client//images/logo.jpg
 
 # 目录结构
 service目录存放url映射处理类,该目录存放的js文件实现onLoad方法。
-frontend是静态文件服务器的根目录，该目录存放前端的静态资源文件如css,图片，html等。
+client是静态文件服务器的根目录，该目录存放前端的静态资源文件如css,图片，html等。
 web.config.json 是配置文件，用于配置web服务端口号，数据库连接字符串，上传文件存放目录等
 
 ```
 |-- service                          
 |   ┠-index.js      //auto handle the http path:/index
 |   ┗-index.ejs     //html template file of index.js       
-|-- frontend         //static htm,js,css,image files
+|-- client         //static htm,js,css,image files
 |   ┠-images
 |   ┠-css
 |   ┗-js
