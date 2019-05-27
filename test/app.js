@@ -63,7 +63,7 @@ describe('http server', function() {
         
         app.onRequest("/test/sessionWrite",async function (ctx){
             let userName="windy"+Math.random();
-            await ctx.session.set(
+            var v=await ctx.session.set(
              {
                userName:userName,
                level:"9",
@@ -98,7 +98,7 @@ describe('http server', function() {
 })
  
 describe('database', function() {
-    it('insert data', function(done) {
+    it('1.insert data', function(done) {
         app.onRequest("/test/insert",function (ctx){
             ctx.database.insert("todo_list",{title:"good",status:1} ).then(function (e){
                 ctx.response.body="insert success:"+JSON.stringify(e);
@@ -112,18 +112,43 @@ describe('database', function() {
         });
         
     });
+
+    it('2.select data', function(done) {
+        app.onRequest("/test/select",function (ctx){
+            ctx.database.select("todo_list").then(function (result){
+                ctx.response.body=JSON.stringify(result);
+            })
+        
+        })
+
+        httpRequest("/test/select").then(function (result){
+            assert.ok(result.body.indexOf("title")>=0);
+            done();
+        });
+        
+    });
+
+    it('3.count data', function(done) {
+        app.onRequest("/test/count",function (ctx){
+            ctx.database.count("todo_list").then(function (count){
+                ctx.response.body="count:"+count;
+            })
+        
+        })
+
+        httpRequest("/test/count").then(function (result){
+            assert.ok(result.body.match(/count:\d+/));
+            done();
+        });
+        
+    });
 })
 app.rewriter({ 
     "/tag\/(.+?)": "/index?code=$1",
     "/baidu":"https://www.baidu.com/"
 })
 
-app.onRequest("/test/count",function (ctx){
-    ctx.database.count("todo_list").then(function (count){
-        ctx.response.body="count:"+count;
-    })
 
-})
 
 
 
