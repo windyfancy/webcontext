@@ -97,6 +97,22 @@ describe('http server', function() {
     });
 })
  
+describe('database', function() {
+    it('insert data', function(done) {
+        app.onRequest("/test/insert",function (ctx){
+            ctx.database.insert("todo_list",{title:"good",status:1} ).then(function (e){
+                ctx.response.body="insert success:"+JSON.stringify(e);
+            })
+        
+        })
+
+        httpRequest("/test/insert").then(function (result){
+            assert.ok(result.body.indexOf("insert success")>=0);
+            done();
+        });
+        
+    });
+})
 app.rewriter({ 
     "/tag\/(.+?)": "/index?code=$1",
     "/baidu":"https://www.baidu.com/"
@@ -109,12 +125,7 @@ app.onRequest("/test/count",function (ctx){
 
 })
 
-app.onRequest("/test/insert",function (ctx){
-    ctx.database.insert("todo_list",{title:"good",status:1} ).then(function (e){
-        ctx.response.body="insert success:"+JSON.stringify(e);
-    })
 
-})
 
 app.onRequest("/test/update",function (ctx){
     ctx.database.update("todo_list",{ status:1},{id:[7,8,9]} ).then(function (e){

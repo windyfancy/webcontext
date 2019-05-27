@@ -19,7 +19,9 @@
     "log4js": "^4.1.0",
     "mysql": "^2.16.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "sqlite3": "^4.0.8"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
