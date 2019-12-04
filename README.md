@@ -164,6 +164,50 @@ service/hello.ejs
 hello,<%=message%>
 </html>
 ```
+# 多种数据库支持
+支持mysql与sqlite两种数据库，在配置文件中type字段定义数据库类型
+```js
+mysql 数据库配置如下：
+{
+    port:"8080",
+    database:{ 
+        type:"mysql",
+        host:'127.0.0.1',//db server ip
+        port:'3306',// db server port
+        user:'root', //account
+        password:'123456', //password
+        database:'todo_db'  //database name or schema's name
+    }
+}
+```
+
+sqlite配置如下：
+```js
+{
+    port:"8080",
+    database:{ 
+        type:"sqlite",
+        database:'./todo.db'  //database file name
+    }
+}
+```
+# 同一个应用程序支持多个数据库
+只需要将配置中的database定义为数组即可
+```
+ "database":[
+    { 
+        "type":"sqlite",
+        "database":"./data/album.db"
+    },
+    { 
+        "type":"sqlite",
+        "database":"./data/words.db"
+    }],
+```
+
+ 在应用程序中可通过this.databaseList获取所有的数据库连接对象，将database属性修改一下就可以切换不同的数据库连接：this.database=this.databaseList[1]; 
+
+
 # 数据库CURD操作
 webcontext内置支持mysql数据库，可以非常方便的进行CURD操作。
 
