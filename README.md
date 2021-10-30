@@ -3,7 +3,7 @@
 2. npm install --save webcontext
 
 # 简介
-webcontext不仅是一个nodejs web开发框架，它还是一个轻量的应用服务器，类似于IIS,tomcat,nginx, 它能提供像php、jsp一样的页面开发体验，集成了静态文件服务，页面路由，反向代理，数据库访问，session存取，文件管理，日志读写等web服务器必备的功能，提供一站式服务，让开发者专注于业务开发，不需要关注node.js底层的技术细节,不需要去选型express,koa各种中间件的用法，它是目前api最简洁,内置功能最齐全的nodejs web开发框架，能够让你编写最少的代码快速实现业务。特性如下：
+webcontext不仅是一个nodejs web开发框架，它还是一个轻量的应用服务器，类似于IIS,tomcat,nginx, 它能提供像php、jsp一样的页面开发体验，集成了静态文件服务，页面路由，反向代理，数据库访问，session存取，文件管理，日志读写等web服务器必备的功能，提供一站式服务，让开发者专注于业务开发，不需要关注node.js底层的技术细节,不需要去选型express,koa各种中间件的用法， 能够让你编写最少的代码快速实现业务。特性如下：
 
 * URL请求自动映射到相应的js文件,类似于php,jsp的页面机制,不需要额外定义路由
 * 支持RestFul,支持url重写，无需修改任何代码即可实现对搜索引擎友好的页面地址。
@@ -26,8 +26,8 @@ webcontext不仅是一个nodejs web开发框架，它还是一个轻量的应用
 ### app.js
 
 ```js
-const WebContext = require('webcontext');
-const app = new WebContext();
+const {Application} = require('webcontext');
+const app = new Application();
  
 ```
 1. 在app.js中引入webcontext，并实例化。
@@ -52,6 +52,19 @@ module.exports= {
     }
 }
 ```
+
+也可以使用es6 class语法,可以获得语法智能感知提示。
+```js
+const {Context}=require("webcontext")
+module.exports=class Page extends Context{  
+  onLoad() {  
+     
+      this.render("hello,world");
+  }
+
+}
+```
+
 可使用数据绑定渲染同名的ejs模板页，示例页面代码如下：
 
 ### ./service/index.js
