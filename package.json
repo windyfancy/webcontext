@@ -13,6 +13,7 @@
     "node.js"
   ],
   "main": "lib/webapplication.js",
+  "repository": "https://github.com/windyfancy/webcontext.git",
   "dependencies": {
     "ejs": "^2.6.1",
     "formidable": "^1.2.1",
