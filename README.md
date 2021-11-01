@@ -18,7 +18,7 @@ webcontext不仅是一个nodejs web开发框架，它还是一个轻量的应用
 * 内置模板引擎(基于ejs)，模板文件与同名文件自动关联 
 * 内置数据库访问(基于mysql)，对CURD操作进行了封装，内置了分页查询和批量更新。
 * 实现了轻量的数据库 ORM映射，类似于hibernate, 可以通过this.models["表名"] 直接获取实体对象进行操作
-* 内置高性能Session(基于mysql内存表，支持多进程、分布式，后续可选基于redis存储)
+* 内置Session(使用进程内存实现，如果需要跨进程使用需要自行使用redis实现)
 * 可配置，所有运行参数都在web.config.json中定义，可通过this.config获取
 * 不需要中间件，所有功能都已内置，依赖极少，一键运行
   
@@ -371,33 +371,25 @@ module.exports= {
 ```
 
 # Session存取
-为了支持多进程和分布式，webcontext使用mysql数据库内存表存储Session。因此使用Session之前，必须确保在web.config.json中配置好database数据库连接， 进程首次启动时将自动创建内存表。
+为了简化使用，session存储在当前进程内存，不支持跨进程或分布式访问。
 
-### Session 读取
-在this.session.load() 函数中得到sessionData对象,session是异步加载的，因此需要用aync/await
+### Session 写入
+
 ```js
 module.exports= {
-    async onLoad() {       
+    async onLoad() {    
+        this.session["userName"]="windy";   
  
-        var sessionData=await session.load();
-        this.response.body="hello,"+sessionData["userName"];
         
          
     }
 }
 ```
-### Session 写入
-使用 this.session.set({key:val}) 直接写入session,支持一次写入多个值。返回promise对象，如需监听写入成功，则在then方法中注册回调函数执行后续操作。
+### Session 读取
 
-以下代码是在session中写入userName字段，写入成功后，再从session中读取userName字段
-```js
 module.exports= {
     onLoad() {       
-        this.session.set({
-            userName:"windy"
-        }).then(()=>{
-             console.log("ok")
-        })
+        console.log(this.session["userName"] )
     }
 }
 ```
