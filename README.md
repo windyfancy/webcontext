@@ -386,7 +386,7 @@ module.exports= {
 }
 ```
 ### Session 读取
-
+```
 module.exports= {
     onLoad() {       
         console.log(this.session["userName"] )
