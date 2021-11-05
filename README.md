@@ -177,6 +177,32 @@ service/hello.ejs
 hello,<%=message%>
 </html>
 ```
+
+# 反向代理其它服务器
+可以轻松实现类似于nginx的反向代理，透传其它服务器的接口，可用于制作爬虫、mock服务器等应用。支持https接口，支持替换cookie domain，支持cors跨域，支持添加referer，在onProxy回调函数中可以修改header和body响应正文，注：为了保证性能，onProxy回调函数中得到的body是Buffer类型，如果目标接口使用gzip压缩，需要自行调用zlib解压缩报文。
+
+```js
+app.proxy({
+    "/myapp": {
+        target: "https://www.domain.com", 
+        referer:"https://www.domain.com",
+        rewrite:  "/",
+        onProxy:function(result) {
+
+            if(result.path.indexOf("/login")>=0){ //匹配url规则
+                result.code=200; //修改状态码
+                result.headers["content-type"]="text/json" //修改http头
+                var bodyStr=Buffer.toString(result.body) //解析body
+                result.body=Buffer.from("追加内容"+bodyStr) //修改body     
+
+            }
+
+            result.headers["Access-Control-Allow-Origin"]="*" //添加cors跨域
+            
+        }
+    }
+})
+```
 # 多种数据库支持
 支持mysql与sqlite两种数据库，在配置文件中type字段定义数据库类型
 ```js
